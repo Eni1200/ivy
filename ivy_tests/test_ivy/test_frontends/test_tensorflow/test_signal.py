@@ -91,3 +91,50 @@ def test_tensorflow_idct(
         norm=norm,
         atol=1e-01,
     )
+
+
+# kaiser_bessel_derived_window
+@handle_frontend_test(
+    fn_tree="tensorflow.signal.kaiser_bessel_derived_window",
+    dtype_and_window_length=helpers.dtype_and_values(
+        available_dtypes=(["int32"]),
+        min_dim_size=1,
+        min_value=3,
+        min_num_dims=1,
+        max_value=20,
+        max_dim_size=1,
+        max_num_dims=1,
+    ),
+    dtype_and_beta=helpers.dtype_and_values(
+        available_dtypes=helpers.get_dtypes("float"),
+        min_dim_size=1,
+        min_value=0,
+        min_num_dims=1,
+        max_value=80,
+        max_dim_size=1,
+        max_num_dims=1,
+    ),
+    test_with_out=st.just(False),
+)
+def test_tensorflow_kaiser_bessel_derived_window(
+    *,
+    dtype_and_window_length,
+    dtype_and_beta,
+    frontend,
+    test_flags,
+    fn_tree,
+    on_device,
+):
+    window_length_dtype, window_length = dtype_and_window_length
+    beta_dtype, beta = dtype_and_beta
+    helpers.test_frontend_function(
+        input_dtypes=[window_length_dtype[0], beta_dtype[0]],
+        frontend=frontend,
+        test_flags=test_flags,
+        fn_tree=fn_tree,
+        on_device=on_device,
+        window_length=window_length[0][0],
+        beta=beta[0][0],
+        rtol=1e-03,
+        atol=1e-03,
+    )
