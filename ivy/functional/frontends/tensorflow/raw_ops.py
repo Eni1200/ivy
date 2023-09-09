@@ -49,6 +49,7 @@ Cos = to_ivy_arrays_and_back(map_raw_ops_alias(tf_frontend.math.cos))
 Cosh = to_ivy_arrays_and_back(map_raw_ops_alias(tf_frontend.math.cosh))
 Cumprod = to_ivy_arrays_and_back(map_raw_ops_alias(tf_frontend.math.cumprod))
 Cumsum = to_ivy_arrays_and_back(map_raw_ops_alias(tf_frontend.math.cumsum))
+Digamma = to_ivy_arrays_and_back(map_raw_ops_alias(tf_frontend.math.digamma))
 Div = to_ivy_arrays_and_back(map_raw_ops_alias(tf_frontend.math.divide))
 Einsum = to_ivy_arrays_and_back(
     with_supported_dtypes(
@@ -253,6 +254,7 @@ Squeeze = to_ivy_arrays_and_back(
 )
 Tan = to_ivy_arrays_and_back(map_raw_ops_alias(tf_frontend.math.tan))
 Tanh = to_ivy_arrays_and_back(map_raw_ops_alias(tf_frontend.math.tanh))
+Tile = to_ivy_arrays_and_back(map_raw_ops_alias(tf_frontend.general_functions.tile))
 Xlogy = to_ivy_arrays_and_back(map_raw_ops_alias(tf_frontend.math.xlogy))
 Zeta = to_ivy_arrays_and_back(
     with_supported_dtypes(
@@ -471,11 +473,6 @@ def Conv3D(
 
 
 @to_ivy_arrays_and_back
-def Cosh(*, x, name="Cosh"):
-    return ivy.cosh(x)
-
-
-@to_ivy_arrays_and_back
 def Cross(*, a, b, name="Cross"):
     a, b = check_tensorflow_casting(a, b)
     return ivy.cross(a, b)
@@ -549,6 +546,11 @@ def Expm1(*, x, name="Expm1"):
 @to_ivy_arrays_and_back
 def FFT(*, input, name="FFT"):
     return ivy.astype(ivy.fft(input, -1), input.dtype)
+
+
+@to_ivy_arrays_and_back
+def FFT2D(*, input, name="FFT2D"):
+    return ivy.astype(ivy.fft2(input, dim=(-2, -1)), input.dtype)
 
 
 @to_ivy_arrays_and_back
@@ -755,6 +757,12 @@ def Softplus(*, features, name="Softplus"):
     return ivy.softplus(features)
 
 
+# Softsign
+@to_ivy_arrays_and_back
+def Softsign(*, features, name="Softsign"):
+    return ivy.softsign(features)
+
+
 @to_ivy_arrays_and_back
 def SplitV(*, value, size_splits, axis, num_split, name="SplitV"):
     return ivy.split(value, num_or_size_splits=size_splits, axis=axis)
@@ -787,9 +795,6 @@ def Svd(*, input, full_matrices=False, compute_uv=True, name=None):
 @to_ivy_arrays_and_back
 def TanhGrad(*, y, dy, name="TanhGrad"):
     return ivy.multiply(dy, ivy.subtract(1, ivy.multiply(y, y)))
-
-
-Tile = to_ivy_arrays_and_back(map_raw_ops_alias(tf_frontend.general_functions.tile))
 
 
 @to_ivy_arrays_and_back
